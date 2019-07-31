@@ -1,0 +1,15 @@
+{
+  "name": "metricq",
+  "version": "1.0.0",
+  "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafan endpoint.",
+  "main": "src/metricq.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mario Bielert <mario.bielert@tu-dresden.de>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "moment": "^2.24.0"
+  }
+}
