@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started</title>
+  </head>
+  <body>
+    <script src="dist/metricq.rest.js" charset="utf-8"></script>
+    <script>
+        window.addEventListener('load', (event) => {
+            var mq = new MetricQREST('https://grafana.metricq.zih.tu-dresden.de/metricq')
+
+            mq.search('pow').then(matches =>
+              console.log(matches)
+            ).catch(error =>
+              console.log('Something went wrong: ' + error)
+            )
+        });
+
+    </script>
+  </body>
+</html>
