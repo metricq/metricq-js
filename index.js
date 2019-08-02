@@ -1,4 +1,4 @@
-var MetricQ = require('./src/metricq.js')
+var MetricQ = require('./src/metricq-rest.js')
 var moment = require('moment')
 
 var mq = new MetricQ('https://grafana.metricq.zih.tu-dresden.de/metricq')
@@ -9,7 +9,7 @@ var mq = new MetricQ('https://grafana.metricq.zih.tu-dresden.de/metricq')
 //   console.log('Something went wrong: ' + error)
 // )
 
-// mq.query(moment().startOf('day'), moment(), 1).target('elab.ariel.power').send().then(data =>
+// mq.query(moment().startOf('day'), moment(), 1).target('elab.ariel.power').run().then(data =>
 //   console.log(data['elab.ariel.power/min']['data'])
 // ).catch(error =>
 //   console.log('Something went wrong: ' + error)
@@ -21,7 +21,7 @@ for (let metric of ['elab.ariel.s0.package.power', 'elab.ariel.s1.power']) {
   q.target(metric)
 }
 
-q.send().then(data =>
+q.run().then(data =>
   console.log(data)
 ).catch(error =>
   console.log('Something went wrong: ' + error)

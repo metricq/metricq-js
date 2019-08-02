@@ -16,8 +16,7 @@ class Query {
     return this
   }
 
-  send () {
-    console.log(this.targets)
+  run () {
     return new Promise((resolve, reject) => {
       axios.post(this.mq.url + '/query', {
         'range': {
