@@ -1,7 +1,7 @@
-var MetricQ = require('./src/metricq-rest.js')
+var MetricQREST = require('./src/metricq-rest.js')
 var moment = require('moment')
 
-var mq = new MetricQ('https://grafana.metricq.zih.tu-dresden.de/metricq')
+var mq = new MetricQREST('https://grafana.metricq.zih.tu-dresden.de/metricq')
 
 // mq.search('pow').then(matches =>
 //   console.log(matches)
@@ -17,7 +17,7 @@ var mq = new MetricQ('https://grafana.metricq.zih.tu-dresden.de/metricq')
 
 let q = mq.query(moment().startOf('day'), moment(), 1)
 
-for (let metric of ['elab.ariel.s0.package.power', 'elab.ariel.s1.power']) {
+for (let metric of ['elab.ariel.s0.package.power', 'elab.ariel.s1.package.power']) {
   q.target(metric)
 }
 
