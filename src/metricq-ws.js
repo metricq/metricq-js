@@ -1,41 +1,29 @@
-var WebSocketClient = require('websocket').client
+var WebSocket = require('websocket').w3cwebsocket
 var moment = require('moment')
 
 class MetricQWebsocket {
-  constructor () {
-    this.ws = new WebSocketClient()
-  }
-
   static connect (uri) {
     return new Promise((resolve, reject) => {
-      let mq = new MetricQWebsocket()
+      let mq = new MetricQWebsocket(uri)
 
-      mq.ws.on('connectFailed', error =>
+      mq.ws.onError = error =>
         reject(error)
-      )
 
-      mq.ws.on('connect', connection => {
-        mq.connection = connection
-        connection.on('error', error => {
-          mq.connection = undefined
+      mq.ws.onopen = () => {
+        mq.ws.onError = error =>
           mq.onError(error)
-        })
 
-        connection.on('close', () => {
-          mq.connection = undefined
-          mq.onClose()
-        })
+        mq.ws.onclose = (event) => {
+          mq.ws = undefined
+          mq.onClose(event)
+        }
 
-        connection.on('message', message => {
-          if (message.type === 'utf8') {
-            mq.handleMessage(message.utf8Data)
-          }
-        })
+        mq.ws.onmessage = message => {
+          mq._handleMessage(message.data)
+        }
 
         resolve(mq)
-      })
-
-      mq.ws.connect(uri)
+      }
     })
   }
 
@@ -44,7 +32,7 @@ class MetricQWebsocket {
       metrics = [metrics]
     }
 
-    this.connection.sendUTF(JSON.stringify({
+    this.ws.send(JSON.stringify({
       'function': 'subscribe',
       'metrics': metrics
     }))
@@ -53,7 +41,11 @@ class MetricQWebsocket {
   onMetaData (metric, metadata) {}
   onData (metric, time, value) {}
 
-  handleMessage (message) {
+  constructor (uri) {
+    this.ws = new WebSocket(uri)
+  }
+
+  _handleMessage (message) {
     var response = JSON.parse(message)
     if (response.hasOwnProperty('error')) {
       console.log('[MetricqWebSocket] Received error message:' + response.error)
