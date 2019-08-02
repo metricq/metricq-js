@@ -8,7 +8,8 @@
   },
   "main": "src/metricq.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --progress --mode=production"
   },
   "author": "Mario Bielert <mario.bielert@tu-dresden.de>",
   "license": "BSD-3-Clause",
@@ -16,5 +17,13 @@
     "axios": "^0.19.0",
     "moment": "^2.24.0",
     "websocket": "^1.0.29"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-lowercase-name": "^1.0.4"
   }
 }
