@@ -10,8 +10,8 @@ class Query {
     this.targets = []
   }
 
-  target (metric, aggregations = ['min', 'max', 'avg']) {
-    this.targets.push({ 'target_metric': metric, 'aggregates': aggregations })
+  target (metric, functions = ['min', 'max', 'avg'], sma_window = null) {
+    this.targets.push({ 'metric': metric, 'functions': functions, 'sma_window': sma_window })
 
     return this
   }
