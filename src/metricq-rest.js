@@ -23,7 +23,7 @@ class Query {
           'from': this.from,
           'to': this.to
         },
-        'intervalMs': this.to.diff(this.from) / this.points,
+        'maxDataPoints': this.points,
         'targets': this.targets
       }).then(result => {
         let data = {}
