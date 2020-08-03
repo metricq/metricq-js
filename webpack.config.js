@@ -3,8 +3,8 @@ var LowerCaseNamePlugin = require('webpack-lowercase-name')
 
 module.exports = {
   entry: {
-    'REST': './src/metricq-rest.js',
-    'Websocket': './src/metricq-ws.js'
+    'Historic': './src/metricq-historic.js',
+    'Live': './src/metricq-live.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

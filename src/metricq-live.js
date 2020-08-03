@@ -1,10 +1,10 @@
 var WebSocket = require('websocket').w3cwebsocket
 var moment = require('moment')
 
-class MetricQWebsocket {
+class MetricQLive {
   static connect (uri) {
     return new Promise((resolve, reject) => {
-      let mq = new MetricQWebsocket(uri)
+      let mq = new MetricQLive(uri)
 
       mq.ws.onError = error =>
         reject(error)
@@ -48,7 +48,7 @@ class MetricQWebsocket {
   _handleMessage (message) {
     var response = JSON.parse(message)
     if (response.hasOwnProperty('error')) {
-      console.log('[MetricqWebSocket] Received error message:' + response.error)
+      console.log('[MetricQLive] Received error message:' + response.error)
       this.onError(response.error)
     } else if (response.hasOwnProperty('data')) {
       for (let datapoint of response.data) {
@@ -59,9 +59,9 @@ class MetricQWebsocket {
         this.onMetaData(metric, response.metadata[metric])
       })
     } else {
-      console.log('[MetricqWebSocket] Received unknown message')
+      console.log('[MetricQLive] Received unknown message')
     }
   }
 }
 
-module.exports = MetricQWebsocket
+module.exports = MetricQLive

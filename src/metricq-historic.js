@@ -45,7 +45,7 @@ class Query {
   }
 }
 
-class MetricQREST {
+class MetricQHistoric {
   constructor (url) {
     this.url = url
   }
@@ -68,4 +68,4 @@ class MetricQREST {
   }
 }
 
-module.exports = MetricQREST
+module.exports = MetricQHistoric
