@@ -4,10 +4,10 @@
     <title>Getting Started</title>
   </head>
   <body>
-    <script src="dist/metricq.websocket.js" charset="utf-8"></script>
+    <script src="dist/metricq.live.js" charset="utf-8"></script>
     <script>
         window.addEventListener('load', (event) => {
-            MetricQWebsocket.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
+            MetricQLive.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
               ws.onData = (metric, time, value) => {
                 console.log(`${metric}: ${time}@${value}`)
               }

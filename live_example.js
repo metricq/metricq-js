@@ -1,6 +1,6 @@
-var MetricQWebsocket = require('./src/metricq-ws.js')
+var MetricQLive = require('./src/metricq-live.js')
 
-MetricQWebsocket.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
+MetricQLive.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
   ws.onData = (metric, time, value) => {
     console.log(`${metric}: ${time}@${value}`)
   }
