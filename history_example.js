@@ -1,4 +1,4 @@
-var MetricQHistory = require('./src/metricq-historic.js')
+var MetricQHistory = require('./src/metricq-history.js')
 var moment = require('moment')
 
 var mq = new MetricQHistory('https://grafana.metricq.zih.tu-dresden.de/metricq')

@@ -51,18 +51,15 @@ class MetricQLive {
   _handleMessage (message) {
     var response = JSON.parse(message)
     if (response.hasOwnProperty('error')) {
-      console.log('[MetricQLive] Received error message:' + response.error)
       this.onError(response.error)
     } else if (response.hasOwnProperty('data')) {
-      for (let datapoint of response.data) {
-        this.onData(datapoint.id, moment(datapoint.ts / 1e6), datapoint.value)
-      }
+      response.data.map(datapoint => this.onData(datapoint.id, moment(datapoint.ts / 1e6), datapoint.value))
     } else if (response.hasOwnProperty('metadata')) {
-      Object.keys(response.metadata).forEach(metric => {
-        this.onMetaData(metric, response.metadata[metric])
-      })
+      for (let [metric, metadata] of Object.entries(response.metadata)) {
+        this.onMetaData(metric, metadata)
+      }
     } else {
-      console.log('[MetricQLive] Received unknown message')
+      this.onError(`Received unknown message: ${response}`)
     }
   }
 }

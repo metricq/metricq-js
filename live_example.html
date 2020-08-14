@@ -4,12 +4,16 @@
     <title>Getting Started</title>
   </head>
   <body>
-    <script src="dist/metricq-live-95836b4ba3640d9f9924.js" charset="utf-8"></script>
+    <script src="dist/metricq-live-a1e016bdee0117410d4c.js" charset="utf-8"></script>
     <script>
         window.addEventListener('load', (event) => {
             MetricQLive.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
               ws.onData = (metric, time, value) => {
                 console.log(`${metric}: ${time}@${value}`)
+              }
+
+              ws.onMetaData = (metric, metadata) => {
+                console.log(`${metric}: ${metadata}`)
               }
 
               ws.subscribe('elab.ariel.power')

@@ -5,6 +5,10 @@ MetricQLive.connect('wss://websocket.metricq.zih.tu-dresden.de').then(ws => {
     console.log(`${metric}: ${time}@${value}`)
   }
 
+  ws.onMetaData = (metric, metadata) => {
+    console.log(`${metric}: ${metadata}`)
+  }
+
   ws.subscribe('elab.ariel.power')
 }).catch(error =>
   console.log('Something went wrong: ' + error)
