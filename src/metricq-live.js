@@ -41,6 +41,9 @@ class MetricQLive {
   onMetaData (metric, metadata) {}
   onData (metric, time, value) {}
 
+  onError (error) {}
+  onClose (event) {}
+
   constructor (uri) {
     this.ws = new WebSocket(uri)
   }
