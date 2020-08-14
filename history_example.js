@@ -1,8 +1,8 @@
-var MetricQHistoric = require('./src/metricq-historic.js')
+var MetricQHistory = require('./src/metricq-historic.js')
 var moment = require('moment')
 
-var mq = new MetricQHistoric('https://grafana.metricq.zih.tu-dresden.de/metricq')
-//var mq = new MetricQHistoric('http://localhost:3001')
+var mq = new MetricQHistory('https://grafana.metricq.zih.tu-dresden.de/metricq')
+//var mq = new MetricQHistory('http://localhost:3001')
 
 mq.search('pow').then(matches =>
   console.log(matches)

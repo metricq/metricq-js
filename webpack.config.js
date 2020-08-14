@@ -15,7 +15,7 @@ module.exports = {
   },
   target: 'web',
   entry: {
-    'Historic': './src/metricq-historic.js',
+    'History': './src/metricq-history.js',
     'Live': './src/metricq-live.js'
   },
   output: {
