@@ -72,6 +72,18 @@ class MetricQHistoric {
     })
   }
 
+  metadata (target) {
+    return new Promise((resolve, reject) => {
+      axios.post(`${this.url}/metadata`, {
+        target: target
+      }).then(result =>
+        resolve(result['data'][target])
+      ).catch(error =>
+        reject(error)
+      )
+    })
+  }
+
   query (from, to, num_points) {
     return new Query(this, moment(from), moment(to), num_points)
   }

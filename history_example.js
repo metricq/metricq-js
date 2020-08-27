@@ -10,6 +10,12 @@ mq.search('pow').then(matches =>
   console.log('Something went wrong: ' + error)
 )
 
+mq.metadata('elab.ariel.power').then(result =>
+  console.log(result)
+).catch(error =>
+  console.log('Something went wrong: ' + error)
+)
+
 let q = mq.query(moment().startOf('day'), moment(), 100)
 
 for (let metric of ['elab.ariel.power']) {
