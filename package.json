@@ -14,7 +14,7 @@
   "author": "Mario Bielert <mario.bielert@tu-dresden.de>",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "moment": "^2.24.0",
     "websocket": "^1.0.31"
   },
