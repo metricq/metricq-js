@@ -15,15 +15,15 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "axios": "^0.21.1",
-    "moment": "^2.24.0",
-    "websocket": "^1.0.31"
+    "moment": "^2.29.1",
+    "websocket": "^1.0.33"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
-    "babel-loader": "^8.0.6",
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "babel-loader": "^8.2.2",
     "moment-locales-webpack-plugin": "^1.2.0",
-    "webpack": "^4.41.2",
+    "webpack": "^4.46.0",
     "webpack-cli": "^3.3.10",
     "webpack-lowercase-name": "^1.0.4"
   },
