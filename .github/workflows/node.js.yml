@@ -30,7 +30,7 @@ jobs:
     #- run: npm test
 
     - name: Upload a Build Artifact
-      if: ${{ matrix.node-version == 15.x }}
+      if: ${{ matrix.node-version == '15.x' }}
       uses: actions/upload-artifact@v2
       with:
         path: dist
