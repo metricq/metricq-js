@@ -1,18 +1,9 @@
 var path = require('path')
 var LowerCaseNamePlugin = require('webpack-lowercase-name')
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
-  node: {
-    crypto: true,
-    http: true,
-    https: true,
-    os: true,
-    vm: true,
-    stream: true,
-    fs: 'empty',
-    child_process: 'empty'
-  },
   target: 'web',
   entry: {
     'History': './src/metricq-history.js',
@@ -37,6 +28,11 @@ module.exports = {
         }
       }
     ]
+  },
+  optimization: {
+    minimizer: [new TerserPlugin({
+      extractComments: false,
+    })],
   },
   plugins: [
     new LowerCaseNamePlugin(),
