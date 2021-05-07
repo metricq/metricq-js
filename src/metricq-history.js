@@ -59,10 +59,12 @@ class MetricQHistoric {
     this.url = url
   }
 
-  search (target) {
+  search (target, metadata = false, limit = undefined) {
     return new Promise((resolve, reject) => {
       axios.post(`${this.url}/search`, {
-        target: target
+        target: target,
+        metadata: metadata,
+        limit: limit
       }).then(result => {
         resolve(result['data'])
       }
