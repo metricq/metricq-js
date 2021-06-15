@@ -46,7 +46,7 @@ class Query {
         'targets': this.targets
       }
 
-      axios.post(`${this.mq.url}/query`, paramters).then(result =>
+      axios.post(`${this.mq.url}/query`, paramters, this.config).then(result =>
         resolve(this._parse_result(result))
       ).catch(error => reject(error)
       )
@@ -55,8 +55,13 @@ class Query {
 }
 
 class MetricQHistoric {
-  constructor (url) {
+  constructor (url, username = undefined, password = undefined) {
     this.url = url
+    if (username !== undefined && password !== undefined) {
+      this.config = { auth: { username: username, password: password }}
+    } else {
+      this.config = undefined
+    }
   }
 
   search (target, metadata = false, limit = undefined) {
@@ -65,7 +70,7 @@ class MetricQHistoric {
         target: target,
         metadata: metadata,
         limit: limit
-      }).then(result => {
+      }, this.config).then(result => {
         resolve(result['data'])
       }
       ).catch(error =>
@@ -78,7 +83,7 @@ class MetricQHistoric {
     return new Promise((resolve, reject) => {
       axios.post(`${this.url}/metadata`, {
         target: target
-      }).then(result =>
+      }, this.config).then(result =>
         resolve(result['data'][target])
       ).catch(error =>
         reject(error)
