@@ -46,7 +46,7 @@ class Query {
         'targets': this.targets
       }
 
-      axios.post(`${this.mq.url}/query`, paramters, this.config).then(result =>
+      axios.post(`${this.mq.url}/query`, paramters, this.mq.config).then(result =>
         resolve(this._parse_result(result))
       ).catch(error => reject(error)
       )
