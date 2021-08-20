@@ -6,7 +6,9 @@
     "type": "git",
     "url": "https://github.com/metricq/metricq-js.git"
   },
+  "main": "./src/metricq.js",
   "exports": {
+    ".": "./src/metricq.js",
     "./metricq-history": "./src/metricq-history.js",
     "./metricq-live": "./src/metricq-live.js"
   },
