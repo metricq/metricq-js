@@ -27,3 +27,15 @@ q.run().then(data =>
 ).catch(error =>
   console.log('Something went wrong: ' + error)
 )
+
+let a = mq.analyze(moment().startOf('day'), moment())
+
+for (let metric of ['elab.ariel.power']) {
+  a.target(metric)
+}
+
+a.run().then(data =>
+  console.log(data["elab.ariel.power"])
+).catch(error =>
+  console.log('Something went wrong: ' + error)
+)
