@@ -4,7 +4,7 @@
     <title>Getting Started</title>
   </head>
   <body>
-    <script src="dist/metricq-history-f4e50085a0ed6f7f77a5.js" charset="utf-8"></script>
+    <script src="dist/metricq-history-7542cd33528fffeff45f.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" charset="utf-8"></script>
     <script>
         window.addEventListener('load', event => {
@@ -28,6 +28,24 @@
                   console.log(data)
               ).catch(error =>
                 console.log('Something went wrong: ' + error)
+              )
+
+              mq.analyze(moment().startOf('day'), moment()).target(matches[0]).run().then(data =>
+                      console.log(data)
+              ).catch(error =>
+                      console.log('Something went wrong: ' + error)
+              )
+
+              mq.analyze(moment().startOf('week'), moment()).target(matches[0]).run().then(data =>
+                      console.log(data)
+              ).catch(error =>
+                      console.log('Something went wrong: ' + error)
+              )
+
+              mq.analyze(moment().startOf('hour'), moment()).target(matches[0]).run().then(data =>
+                      console.log(data)
+              ).catch(error =>
+                      console.log('Something went wrong: ' + error)
               )
             }).catch(error =>
               console.log('Something went wrong: ' + error)

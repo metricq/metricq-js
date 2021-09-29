@@ -54,6 +54,60 @@ class Query {
   }
 }
 
+class AnalyzeQuery {
+  constructor (mq, from, to) {
+    this.mq = mq
+    this.from = from
+    this.to = to
+    this.targets = []
+  }
+
+  target (metric) {
+    this.targets.push({
+      'metric': metric,
+    })
+
+    return this
+  }
+
+  _parse_result (result) {
+    let data = {}
+    for (var target of result['data']) {
+      data[target['target']] = {
+        'time_measurements': target['time_measurements'],
+        "minimum": target['minimum'],
+        "maximum": target['maximum'],
+        "sum": target['sum'],
+        "count": target['count'],
+        "integral_ns": target['integral_ns'],
+        "active_time_ns": target['active_time_ns'],
+        "mean": target['mean'],
+        "mean_integral": target['mean_integral'],
+        "mean_sum": target['mean_sum']
+      }
+    }
+
+    return data
+  }
+
+  run () {
+    return new Promise((resolve, reject) => {
+      const paramters = {
+        'range': {
+          'from': this.from.toISOString(),
+          'to': this.to.toISOString()
+        },
+        'targets': this.targets
+      }
+
+      axios.post(`${this.mq.url}/analyze`, paramters, this.mq.config).then(result =>
+        resolve(this._parse_result(result))
+      ).catch(error => reject(error)
+      )
+    })
+  }
+}
+
 class MetricQHistoric {
   constructor (url, username = undefined, password = undefined) {
     this.url = url
@@ -93,6 +147,10 @@ class MetricQHistoric {
 
   query (from, to, num_points) {
     return new Query(this, moment(from), moment(to), num_points)
+  }
+
+  analyze (from, to) {
+    return new AnalyzeQuery(this, moment(from), moment(to))
   }
 }
 
