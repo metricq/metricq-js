@@ -1,7 +1,7 @@
 {
-  "name": "metricq",
+  "name": "@metricq/metricq-js",
   "version": "2.1.0",
-  "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafan endpoint.",
+  "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafana endpoint.",
   "repository": {
     "type": "git",
     "url": "https://github.com/metricq/metricq-js.git"
@@ -28,12 +28,15 @@
     "@babel/preset-env": "^7.13.12",
     "babel-loader": "^8.2.2",
     "moment-locales-webpack-plugin": "^1.2.0",
+    "terser-webpack-plugin": "^5.1.1",
     "webpack": "^5.28.0",
     "webpack-cli": "^4.6.0",
-    "webpack-lowercase-name": "^1.0.4",
-    "terser-webpack-plugin": "^5.1.1"
+    "webpack-lowercase-name": "^1.0.4"
   },
   "browser": {
     "child_process": false
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
