@@ -1,0 +1,28 @@
+{
+  "name": "@metricq/live",
+  "version": "3.0.0",
+  "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-sink-websocket endpoint.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metricq/metricq-js.git",
+    "directory": "live"
+  },
+  "main": "./metricq-live.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mario Bielert <mario.bielert@tu-dresden.de>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "moment": "^2.29.1",
+    "websocket": "^1.0.33"
+  },
+  "devDependencies": {
+  },
+  "browser": {
+    "child_process": false
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

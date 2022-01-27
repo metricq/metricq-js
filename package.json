@@ -1,5 +1,5 @@
 {
-  "name": "@metricq/metricq-js",
+  "name": "@metricq/metricq",
   "version": "2.1.0",
   "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafana endpoint.",
   "repository": {
@@ -8,9 +8,7 @@
   },
   "main": "./src/metricq.js",
   "exports": {
-    ".": "./src/metricq.js",
-    "./metricq-history": "./src/metricq-history.js",
-    "./metricq-live": "./src/metricq-live.js"
+    ".": "./src/metricq.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
