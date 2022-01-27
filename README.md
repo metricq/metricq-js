@@ -21,3 +21,10 @@ yarn add @metricq/live
 or
 yarn add @metricq/history
 ```
+
+## Usage
+
+```js
+import MetricQHistory from "@metricq/history"
+import MetricQLive from "@metricq/live"
+```
