@@ -1,0 +1,5 @@
+.github/
+.idea/
+dist/
+webpack.config.js
+*_example.html

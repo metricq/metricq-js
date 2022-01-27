@@ -1,4 +1,4 @@
-import MetricQHistory from './metricq-history.js'
-import MetricQLive from './metricq-live.js'
+import MetricQHistory from '../history/metricq-history.js'
+import MetricQLive from '../live/metricq-live.js'
 
 export { MetricQLive, MetricQHistory }

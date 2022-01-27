@@ -6,8 +6,8 @@ const TerserPlugin = require('terser-webpack-plugin')
 module.exports = {
   target: 'web',
   entry: {
-    'History': './src/metricq-history.js',
-    'Live': './src/metricq-live.js'
+    'History': './history/metricq-history.js',
+    'Live': './live/metricq-live.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
