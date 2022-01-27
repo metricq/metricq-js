@@ -1,6 +1,6 @@
 {
-  "name": "@metricq/metricq",
-  "version": "2.1.0",
+  "name": "metricq",
+  "version": "3.0.0",
   "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafana endpoint.",
   "repository": {
     "type": "git",
@@ -33,8 +33,5 @@
   },
   "browser": {
     "child_process": false
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
