@@ -17,7 +17,9 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
           scope: '@metricq'
-      - run: npm build
-      - run: npm publish
+      - run: npm publish history/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm publish live/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
