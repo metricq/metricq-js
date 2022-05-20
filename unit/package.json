@@ -1,0 +1,29 @@
+{
+  "name": "@metricq/unit",
+  "version": "3.0.0",
+  "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a library for handling units from metadata.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metricq/metricq-js.git",
+    "directory": "unit"
+  },
+  "main": "./metricq-unit.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Franz Höpfner <franz.hoepfner@tu-dresden.de>",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "babel-plugin-rewire": "^1.2.0",
+    "jest": "^27.5.1"
+  },
+  "browser": {
+    "child_process": false
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
