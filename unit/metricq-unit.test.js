@@ -1,50 +1,6 @@
 import { MetricQUnit } from './metricq-unit.js'
 import unitRewire from  './metricq-unit.js'
 
-// test('Unit part test toString', () => {
-//   const UnitPart = unitRewire.__get__('UnitPart');
-//   expect(new UnitPart("N").toString()).toBe("N");
-//   expect(new UnitPart("N").inverted().toString()).toBe("N^-1");
-// });
-//
-//
-// test('unit part test parse with exponent', () => {
-//   const UnitPart = unitRewire.__get__('UnitPart');
-//   const unit = UnitPart.parse("N^2")
-//   expect(unit.symbol).toBe("N");
-//   expect(unit.exponent).toBe(2);
-// });
-//
-// test('unit part test parse without exponent', () => {
-//   const UnitPart = unitRewire.__get__('UnitPart');
-//   const unit = UnitPart.parse("N")
-//   expect(unit.symbol).toBe("N");
-//   expect(unit.exponent).toBe(1);
-// });
-//
-// test('unit part test scaling', () => {
-//   const UnitPart = unitRewire.__get__('UnitPart');
-//   const unit = UnitPart.parse("kg")
-//   expect(unit.symbol).toBe("g");
-//   expect(unit.exponent).toBe(1);
-//   expect(unit.scale).toBe(1e3);
-//
-//   const scaledUnit = unit.scaled(1e3);
-//   expect(scaledUnit.exponent).toBe(1);
-//   expect(scaledUnit.scale).toBe(1e6);
-// });
-//
-// test('unit part test advanced scaling', () => {
-//   const UnitPart = unitRewire.__get__('UnitPart');
-//   const unit = UnitPart.parse("kg^2")
-//   expect(unit.symbol).toBe("g");
-//   expect(unit.exponent).toBe(2);
-//   expect(unit.scale).toBe(1e3);
-//
-//   const scaledUnit = unit.scaled(1e6);
-//   expect(scaledUnit.exponent).toBe(2);
-//   expect(scaledUnit.scale).toBe(1e6);
-// });
 
 test('test simple parsing', () => {
   const unit = MetricQUnit.parse("g")
