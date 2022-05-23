@@ -51,6 +51,7 @@ test('test (J kg⁻¹ K⁻¹) and (kJ K⁻¹ Mg⁻¹) have same base units ', ()
   const bUnit = MetricQUnit.parse("kJ K⁻¹ Mg⁻¹")
   expect(aUnit.hasSameBaseUnits(bUnit)).toBeTruthy();
   expect(bUnit.hasSameBaseUnits(aUnit)).toBeTruthy();
+  expect(MetricQUnit.haveSameBaseUnit([aUnit, bUnit])).toBeTruthy();
 });
 
 test('test combined scale ', () => {
@@ -91,4 +92,18 @@ test('test parsing global unit with scale and exponent kN⁻¹', () => {
   const unit = MetricQUnit.parse("kN⁻¹")
   expect(unit.unitParts.length).toBe(3);
   expect(unit.getUnitString(true, true, true)).toBe("Mg^-1 m^-1 s^2");
+});
+
+test('test converting simple units', () => {
+  const aUnit = MetricQUnit.parse("g")
+  const bUnit = MetricQUnit.parse("kg")
+  expect(aUnit.convertFromUnit(1, bUnit)).toBe(1000);
+  expect(aUnit.convertFromUnit(2.45, bUnit)).toBe(2450);
+});
+
+test('test converting complex units', () => {
+  const aUnit = MetricQUnit.parse("m s^-1")
+  const bUnit = MetricQUnit.parse("km h^-1")
+  expect(bUnit.combinedScale()).toBeCloseTo(1/3.6);
+  expect(bUnit.convertFromUnit(1, aUnit)).toBeCloseTo(3.6);
 });

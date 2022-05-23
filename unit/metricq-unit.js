@@ -66,16 +66,14 @@ class MetricQUnit {
     this.unitParts = unitParts ? unitParts : []
     this.symbol = symbol
     this.category = category
+    this.exponent = 1
+    this.scale = 1
     if(this.standalone) {
       if (isFinite(exponent)) {
         this.exponent = exponent
-      } else {
-        this.exponent = 1
       }
       if (isFinite(scale)) {
         this.scale = scale
-      } else {
-        this.scale = 1
       }
     } else if (exponent !== undefined || scale !== undefined) {
       throw new Error("Exponent and scale are only allowed for standalone units (aka units with a symbol)!")
@@ -146,7 +144,7 @@ class MetricQUnit {
 
   invert () {
     if(this.standalone) {
-      return new MetricQUnit(this.symbol, this.unitParts.map((a) => a.invert()), this.category, this.exponent * -1, this.scale)
+      return new MetricQUnit(this.symbol, this.unitParts, this.category, this.exponent * -1, this.scale)
     }
     return new MetricQUnit(undefined, this.unitParts.map((a) => a.invert()), this.category, undefined, undefined)
   }
@@ -167,10 +165,15 @@ class MetricQUnit {
   }
 
   toBaseUnitString () {
+    return this.getBaseUnits().map(a => a.getUnitString(false)).join(' ')
+  }
+
+  getBaseUnits() {
     if(this.isBaseUnit()) {
-      return this.getUnitString(false)
+      return [this]
     }
-    return [...this.unitParts].sort((aUnitPart, bUnitPart) => aUnitPart.symbol.localeCompare(bUnitPart.symbol)).map(a => a.toBaseUnitString()).join(' ')
+
+    return this._adjustedUnitParts().map(aUnit => aUnit.getBaseUnits()).reduce((acc, curValue) => acc.concat(curValue), []).sort((aUnitPart, bUnitPart) => aUnitPart.symbol.localeCompare(bUnitPart.symbol))
   }
 
   hasSameBaseUnits (bUnit) {
@@ -181,7 +184,7 @@ class MetricQUnit {
     if(this.isBaseUnit()) {
       return this.scale ** this.exponent
     }
-    return this.unitParts.map(aUnit => aUnit.scale ** aUnit.exponent).reduce((acc, curValue) => acc * curValue, 1)
+    return (this.unitParts.map(aUnit => aUnit.combinedScale()).reduce((acc, curValue) => acc * curValue, 1) * this.scale) ** this.exponent
   }
 
   isEqual(bUnit) {
@@ -206,6 +209,16 @@ class MetricQUnit {
 
     let unitParts = [...this.unitParts].map(a => a.powered(exponent))
     return new MetricQUnit(undefined, unitParts, undefined, undefined, undefined)
+  }
+
+  convertFromUnit(value, oldUnit) {
+    if(!this.hasSameBaseUnits(oldUnit)) {
+      throw new Error("Can not convert value to unit with different base units! this: " + this.toBaseUnitString() + ", oldUnit: " + oldUnit.toBaseUnitString())
+    }
+
+    let scale = oldUnit.combinedScale() / this.combinedScale()
+
+    return value * scale
   }
 
   static parse (unitString, symbol) {
@@ -254,9 +267,19 @@ class MetricQUnit {
     }
   }
 
+  static haveSameBaseUnit(units) {
+    const unitSet = new Set(units.map(aUnit => aUnit.toBaseUnitString()))
+    return unitSet.size === 1
+  }
+
   static globalUnitStore = []
 }
 
 MetricQUnit.globalUnitStore.push(MetricQUnit.parse("kg m s^-2", "N"))
+MetricQUnit.globalUnitStore.push(new MetricQUnit("h", [new MetricQUnit("s", [], undefined, 1, 3600)], undefined, 1, 1))
+
+
+// TODO: unit convert
+// TODO: value formatter
 
 export { MetricQUnit }
