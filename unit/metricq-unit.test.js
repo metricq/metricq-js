@@ -1,4 +1,4 @@
-import { MetricQUnit, MetricQUnitConvert } from './metricq-unit.js'
+import { MetricQUnit, MetricQUnitConvert, MetricQValueFormatter } from './metricq-unit.js'
 import unitRewire from  './metricq-unit.js'
 
 
@@ -114,4 +114,10 @@ test('test unit converter', () => {
   const kmsToMsConvert = new MetricQUnitConvert(aUnit, bUnit)
   expect(kmsToMsConvert.convertValue(1)).toBe(1000);
   expect(kmsToMsConvert.convertValues([1, 1.5, 2])).toStrictEqual([1000, 1500, 2000]);
+});
+
+test('test value formatter', () => {
+  const aUnit = MetricQUnit.parse("g")
+  const valueFormater = new MetricQValueFormatter(aUnit)
+  expect(valueFormater.value(1000)).toBe("1kg");
 });

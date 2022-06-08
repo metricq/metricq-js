@@ -296,5 +296,25 @@ class MetricQUnitConvert {
 
 // TODO: value formatter
 
+class MetricQValueFormatter {
+  constructor (unit) {
+    this.unit = unit
+  }
 
-export { MetricQUnit, MetricQUnitConvert }
+  valueString(value) {
+    // source: https://stackoverflow.com/a/53169221
+    const numInSciNot = {};
+    [numInSciNot.coefficient, numInSciNot.exponent] =
+      value.toExponential().split('e').map(Number);
+
+    const remainder = numInSciNot.exponent % 3;
+    const scaleExponent = numInSciNot.exponent - remainder;
+
+    const scaledUnit = this.unit.scaled(10 ** scaleExponent);
+    return (numInSciNot.coefficient * (10 ** remainder)).toString() + scaledUnit.toString()
+  }
+
+}
+
+
+export { MetricQUnit, MetricQUnitConvert, MetricQValueFormatter }
