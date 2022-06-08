@@ -279,7 +279,22 @@ MetricQUnit.globalUnitStore.push(MetricQUnit.parse("kg m s^-2", "N"))
 MetricQUnit.globalUnitStore.push(new MetricQUnit("h", [new MetricQUnit("s", [], undefined, 1, 3600)], undefined, 1, 1))
 
 
-// TODO: unit convert
+class MetricQUnitConvert {
+  constructor (fromUnit, toUnit) {
+    this.fromUnit = fromUnit
+    this.toUnit = toUnit
+  }
+
+  convertValue(value) {
+    return this.toUnit.convertFromUnit(value, this.fromUnit)
+  }
+
+  convertValues(values) {
+    return values.map(v => this.toUnit.convertFromUnit(v, this.fromUnit))
+  }
+}
+
 // TODO: value formatter
 
-export { MetricQUnit }
+
+export { MetricQUnit, MetricQUnitConvert }

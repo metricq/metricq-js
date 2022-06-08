@@ -1,4 +1,4 @@
-import { MetricQUnit } from './metricq-unit.js'
+import { MetricQUnit, MetricQUnitConvert } from './metricq-unit.js'
 import unitRewire from  './metricq-unit.js'
 
 
@@ -106,4 +106,12 @@ test('test converting complex units', () => {
   const bUnit = MetricQUnit.parse("km h^-1")
   expect(bUnit.combinedScale()).toBeCloseTo(1/3.6);
   expect(bUnit.convertFromUnit(1, aUnit)).toBeCloseTo(3.6);
+});
+
+test('test unit converter', () => {
+  const aUnit = MetricQUnit.parse("km s^-1")
+  const bUnit = MetricQUnit.parse("m s^-1")
+  const kmsToMsConvert = new MetricQUnitConvert(aUnit, bUnit)
+  expect(kmsToMsConvert.convertValue(1)).toBe(1000);
+  expect(kmsToMsConvert.convertValues([1, 1.5, 2])).toStrictEqual([1000, 1500, 2000]);
 });
