@@ -119,5 +119,5 @@ test('test unit converter', () => {
 test('test value formatter', () => {
   const aUnit = MetricQUnit.parse("g")
   const valueFormater = new MetricQValueFormatter(aUnit)
-  expect(valueFormater.value(1000)).toBe("1kg");
+  expect(valueFormater.valueString(1000)).toBe("1kg");
 });

@@ -1,3 +1,6 @@
+/**
+ * @module unit
+ */
 const scales = {
   'h': 1e2,
   'k': 1e3,
@@ -54,7 +57,7 @@ function superscriptToAscii (str) {
 class MetricQUnit {
 
   /**
-   * Represents a unit.
+   * Represents a unit or a composition of units. To get a unit object from a string representation use [MetricQUnit.parse]{@linkcode module:unit~MetricQUnit.parse} instead.
    * @constructor
    * @param {string} symbol - The symbol of the unit. If a symbol is set, this is a standalone unit.
    * @param {array} unitParts - The parts of the unit. This is empty for a base unit.
@@ -64,7 +67,11 @@ class MetricQUnit {
    */
   constructor (symbol, unitParts, category, exponent, scale) {
     this.unitParts = unitParts ? unitParts : []
-    this.symbol = symbol
+    if (symbol === undefined) {
+      this.symbol = null
+    } else {
+      this.symbol = symbol
+    }
     this.category = category
     this.exponent = 1
     this.scale = 1
@@ -85,7 +92,7 @@ class MetricQUnit {
    * @returns {boolean}
    */
   get standalone() {
-    return this.symbol !== undefined && this.symbol !== null
+    return this.symbol != null
   }
 
   /**
@@ -142,6 +149,10 @@ class MetricQUnit {
     return unitParts
   }
 
+  /**
+   * Creates a new unit, which is 1 / thisUnit.
+   * @returns {MetricQUnit}
+   */
   invert () {
     if(this.standalone) {
       return new MetricQUnit(this.symbol, this.unitParts, this.category, this.exponent * -1, this.scale)
@@ -149,6 +160,11 @@ class MetricQUnit {
     return new MetricQUnit(undefined, this.unitParts.map((a) => a.invert()), this.category, undefined, undefined)
   }
 
+  /**
+   * Combine two units into a new unit. This is basically a multiplication of the two units.
+   * @param {MetricQUnit} bUnit
+   * @returns {MetricQUnit}
+   */
   concat (bUnit) {
     let newUnitParts = []
     if(this.standalone) {
@@ -191,6 +207,11 @@ class MetricQUnit {
     return this.hasSameBaseUnits(bUnit) && this.combinedScale() === bUnit.combinedScale()
   }
 
+  /**
+   * Creates a new unit scaled by the give scale.
+   * @param {number} scale
+   * @returns {MetricQUnit}
+   */
   scaled(scale) {
     if(this.standalone) {
       let adjustedScale = scale ** (1 / this.exponent)
@@ -211,6 +232,12 @@ class MetricQUnit {
     return new MetricQUnit(undefined, unitParts, undefined, undefined, undefined)
   }
 
+  /**
+   * Converts a value from oldUnit to this unit.
+   * @param {number} value - The value to convert.
+   * @param {MetricQUnit} oldUnit - The unit of the value.
+   * @returns {number}
+   */
   convertFromUnit(value, oldUnit) {
     if(!this.hasSameBaseUnits(oldUnit)) {
       throw new Error("Can not convert value to unit with different base units! this: " + this.toBaseUnitString() + ", oldUnit: " + oldUnit.toBaseUnitString())
@@ -221,6 +248,30 @@ class MetricQUnit {
     return value * scale
   }
 
+  /**
+   * Parses a string of units with scale and exponents and returns a unit object.
+   * With the optional symbol parameter a new [standalone]{@link module:unit~MetricQUnit.standalone} unit is created.
+   *
+   * The unit string is parsed according to the following rules:
+   * - multiplication is represented by space or *
+   * - division is represented by /
+   * - exponents are represented by ^ or unicode superscript (e.g. ⁵)
+   * - multiplication and division split the unit string in unit parts
+   * - unit parts can be any length
+   * - if the first character of the unit parts matches an SI prefix, it is parsed as scaling
+   *
+   * @example
+   * // returns a unit object with the parts 'm' and 's^-1'
+   * MetricQUnit.parse("m/s");
+   *
+   * @example
+   * // returns a unit object for 'N', with the information that N = kg m s^-2
+   * MetricQUnit.parse("kg m s^-2", "N");
+   *
+   * @param {string} unitString - String representation of the unit, maybe composed of other units
+   * @param {string} [symbol] - A string symbol representing this composition of units as a new unit
+   * @returns {MetricQUnit}
+   */
   static parse (unitString, symbol) {
     if (unitString.includes('/')) {
       const parts = unitString.split('/', 2)
@@ -267,6 +318,11 @@ class MetricQUnit {
     }
   }
 
+  /**
+   * Check if an array of units has the same base unit.
+   * @param {MetricQUnit[]} units - The array of units.
+   * @returns {boolean}
+   */
   static haveSameBaseUnit(units) {
     const unitSet = new Set(units.map(aUnit => aUnit.toBaseUnitString()))
     return unitSet.size === 1
@@ -280,21 +336,34 @@ MetricQUnit.globalUnitStore.push(new MetricQUnit("h", [new MetricQUnit("s", [], 
 
 
 class MetricQUnitConvert {
+  /**
+   * Helper to convert multiple values from one to another unit.
+   * @param {MetricQUnit} fromUnit
+   * @param {MetricQUnit} toUnit
+   */
   constructor (fromUnit, toUnit) {
     this.fromUnit = fromUnit
     this.toUnit = toUnit
   }
 
+  /**
+   * Convert a single value.
+   * @param {number} value
+   * @returns {number}
+   */
   convertValue(value) {
     return this.toUnit.convertFromUnit(value, this.fromUnit)
   }
 
+  /**
+   * Convert an array of values.
+   * @param {number[]} values
+   * @returns {number[]}
+   */
   convertValues(values) {
     return values.map(v => this.toUnit.convertFromUnit(v, this.fromUnit))
   }
 }
-
-// TODO: value formatter
 
 class MetricQValueFormatter {
   constructor (unit) {
