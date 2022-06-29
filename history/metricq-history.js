@@ -111,9 +111,9 @@ class AnalyzeQuery {
 }
 
 class MetricQHistoric {
-  constructor (url, username = undefined, password = undefined, postFunction = axios.post) {
+  constructor (url, username = undefined, password = undefined) {
     this.url = url
-    this.postFunction = postFunction
+    this.postFunction = axios.post
     if (username !== undefined && password !== undefined) {
       this.config = { auth: { username: username, password: password }}
     } else {
