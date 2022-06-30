@@ -130,7 +130,7 @@ class HtaQuery{
 
     for (var metric of result['data']) {
       const datapoints = metric[metric['mode']].map(datapoint => {
-        return { 'time': moment(datapoint['time']), 'min': datapoint['min'], 'avg': datapoint['avg'], 'max': datapoint['max'] }
+        return { 'time': moment(datapoint['time']), 'min': datapoint['min'], 'avg': datapoint['avg'], 'max': datapoint['max'], 'count': datapoint['count'] }
       })
       data[metric['metric']] = {
         'mode': metric['mode'],
