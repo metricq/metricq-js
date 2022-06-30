@@ -39,3 +39,15 @@ a.run().then(data =>
 ).catch(error =>
   console.log('Something went wrong: ' + error)
 )
+
+let h = mq.htaquery(moment().startOf('day'), moment(), 4)
+
+for (let metric of ['elab.ariel.power']) {
+  h.metric(metric)
+}
+
+h.run().then(data =>
+  console.log(data["elab.ariel.power"])
+).catch(error =>
+  console.log('Something went wrong: ' + error)
+)
