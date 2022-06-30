@@ -118,29 +118,18 @@ class HtaQuery{
   }
 
   metric (metric) {
-    this.metrics.push({
-      'metric': metric,
-    })
+    this.metrics.push(
+      metric
+    )
 
     return this
   }
 
   _parse_result (result) {
-    let data = {}
-
-    for (var metric of result['data']) {
-      const datapoints = metric[metric['mode']].map(datapoint => {
-        if(metric['mode'] === 'aggregates')
-          return { 'time': moment(datapoint['time']), 'min': datapoint['min'], 'avg': datapoint['avg'], 'max': datapoint['max'], 'count': datapoint['count'] }
-        else if (metric['mode'] === 'raw')
-          return { 'time': moment(datapoint['time']), 'value': datapoint['value']}
-        else
-          return ''
-      })
-      data[metric['metric']] = {
-        'mode': metric['mode'],
-        'time_measurements': metric['time_measurements'],
-        'data': datapoints
+    let data = result['data']
+    for(const metric_data of Object.values(data)) {
+      for (const value of metric_data[metric_data.mode]) {
+        value.time = moment(value.time)
       }
     }
 
@@ -155,7 +144,7 @@ class HtaQuery{
           'to': this.to.toISOString()
         },
         'maxDataPoints': this.points,
-        'targets': this.metrics
+        'metrics': this.metrics
       }
       axios.post(`${this.mq.url}/query_hta`, paramters, this.mq.config).then(result =>
         resolve(this._parse_result(result))
