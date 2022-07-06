@@ -2,12 +2,13 @@ var axios = require('axios')
 var moment = require('moment')
 
 class Query {
-  constructor (mq, from, to, points) {
+  constructor (mq, from, to, points, postFunction) {
     this.mq = mq
     this.from = from
     this.to = to
     this.points = points
     this.targets = []
+    this.postFunction = postFunction
   }
 
   target (metric, functions = ['min', 'max', 'avg'], sma_window = null) {
@@ -46,7 +47,7 @@ class Query {
         'targets': this.targets
       }
 
-      axios.post(`${this.mq.url}/query`, paramters, this.mq.config).then(result =>
+      this.postFunction(`${this.mq.url}/query`, paramters, this.mq.config).then(result =>
         resolve(this._parse_result(result))
       ).catch(error => reject(error)
       )
@@ -55,11 +56,12 @@ class Query {
 }
 
 class AnalyzeQuery {
-  constructor (mq, from, to) {
+  constructor (mq, from, to, postFunction) {
     this.mq = mq
     this.from = from
     this.to = to
     this.targets = []
+    this.postFunction = postFunction
   }
 
   target (metric) {
@@ -100,7 +102,7 @@ class AnalyzeQuery {
         'targets': this.targets
       }
 
-      axios.post(`${this.mq.url}/analyze`, paramters, this.mq.config).then(result =>
+      this.postFunction(`${this.mq.url}/analyze`, paramters, this.mq.config).then(result =>
         resolve(this._parse_result(result))
       ).catch(error => reject(error)
       )
@@ -111,6 +113,7 @@ class AnalyzeQuery {
 class MetricQHistoric {
   constructor (url, username = undefined, password = undefined) {
     this.url = url
+    this.postFunction = axios.post
     if (username !== undefined && password !== undefined) {
       this.config = { auth: { username: username, password: password }}
     } else {
@@ -120,7 +123,7 @@ class MetricQHistoric {
 
   search (target, metadata = false, limit = undefined) {
     return new Promise((resolve, reject) => {
-      axios.post(`${this.url}/search`, {
+      this.postFunction(`${this.url}/search`, {
         target: target,
         metadata: metadata,
         limit: limit
@@ -135,7 +138,7 @@ class MetricQHistoric {
 
   metadata (target) {
     return new Promise((resolve, reject) => {
-      axios.post(`${this.url}/metadata`, {
+      this.postFunction(`${this.url}/metadata`, {
         target: target
       }, this.config).then(result =>
         resolve(result['data'][target])
@@ -146,11 +149,11 @@ class MetricQHistoric {
   }
 
   query (from, to, num_points) {
-    return new Query(this, moment(from), moment(to), num_points)
+    return new Query(this, moment(from), moment(to), num_points, this.postFunction)
   }
 
   analyze (from, to) {
-    return new AnalyzeQuery(this, moment(from), moment(to))
+    return new AnalyzeQuery(this, moment(from), moment(to), this.postFunction)
   }
 }
 
