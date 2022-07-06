@@ -110,6 +110,52 @@ class AnalyzeQuery {
   }
 }
 
+class HtaQuery{
+  constructor (mq, from, to, points) {
+    this.mq = mq
+    this.from = from
+    this.to = to
+    this.points = points
+    this.metrics = []
+  }
+
+  metric (metric) {
+    this.metrics.push(
+      metric
+    )
+
+    return this
+  }
+
+  _parse_result (result) {
+    let data = result['data']
+    for(const metric_data of Object.values(data)) {
+      for (const value of metric_data[metric_data.mode]) {
+        value.time = moment(value.time)
+      }
+    }
+
+    return data
+  }
+
+  run () {
+    return new Promise((resolve, reject) => {
+      const paramters = {
+        'range': {
+          'from': this.from.toISOString(),
+          'to': this.to.toISOString()
+        },
+        'maxDataPoints': this.points,
+        'metrics': this.metrics
+      }
+      axios.post(`${this.mq.url}/query_hta`, paramters, this.mq.config).then(result =>
+        resolve(this._parse_result(result))
+      ).catch(error => reject(error)
+      )
+    })
+  }
+}
+
 class MetricQHistoric {
   constructor (url, username = undefined, password = undefined) {
     this.url = url
@@ -154,6 +200,10 @@ class MetricQHistoric {
 
   analyze (from, to) {
     return new AnalyzeQuery(this, moment(from), moment(to), this.postFunction)
+  }
+
+  htaquery (from, to, num_points) {
+    return new HtaQuery(this, moment(from), moment(to), num_points)
   }
 }
 
