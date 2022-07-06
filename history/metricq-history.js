@@ -1,210 +1,223 @@
-var axios = require('axios')
-var moment = require('moment')
+var axios = require("axios");
+var moment = require("moment");
 
 class Query {
-  constructor (mq, from, to, points, postFunction) {
-    this.mq = mq
-    this.from = from
-    this.to = to
-    this.points = points
-    this.targets = []
-    this.postFunction = postFunction
+  constructor(mq, from, to, points, postFunction) {
+    this.mq = mq;
+    this.from = from;
+    this.to = to;
+    this.points = points;
+    this.targets = [];
+    this.postFunction = postFunction;
   }
 
-  target (metric, functions = ['min', 'max', 'avg'], sma_window = null) {
+  target(metric, functions = ["min", "max", "avg"], sma_window = null) {
     this.targets.push({
-      'metric': metric,
-      'functions': functions,
-      'sma_window': sma_window
-    })
+      metric: metric,
+      functions: functions,
+      sma_window: sma_window,
+    });
 
-    return this
+    return this;
   }
 
-  _parse_result (result) {
-    let data = {}
-    for (var target of result['data']) {
-      const datapoints = target['datapoints'].map(datapoint => {
-        return { 'time': moment(datapoint[1]), 'value': datapoint[0] }
-      })
-      data[target['target']] = {
-        'time_measurements': target['time_measurements'],
-        'data': datapoints
-      }
+  _parse_result(result) {
+    let data = {};
+    for (var target of result["data"]) {
+      const datapoints = target["datapoints"].map((datapoint) => {
+        return { time: moment(datapoint[1]), value: datapoint[0] };
+      });
+      data[target["target"]] = {
+        time_measurements: target["time_measurements"],
+        data: datapoints,
+      };
     }
 
-    return data
+    return data;
   }
 
-  run () {
+  run() {
     return new Promise((resolve, reject) => {
-      const paramters = {
-        'range': {
-          'from': this.from.toISOString(),
-          'to': this.to.toISOString()
+      const parameters = {
+        range: {
+          from: this.from.toISOString(),
+          to: this.to.toISOString(),
         },
-        'maxDataPoints': this.points,
-        'targets': this.targets
-      }
+        maxDataPoints: this.points,
+        targets: this.targets,
+      };
 
-      this.postFunction(`${this.mq.url}/query`, paramters, this.mq.config).then(result =>
-        resolve(this._parse_result(result))
-      ).catch(error => reject(error)
-      )
-    })
+      this.postFunction(`${this.mq.url}/query`, parameters, this.mq.config)
+        .then((result) => resolve(this._parse_result(result)))
+        .catch((error) => reject(error));
+    });
   }
 }
 
 class AnalyzeQuery {
-  constructor (mq, from, to, postFunction) {
-    this.mq = mq
-    this.from = from
-    this.to = to
-    this.targets = []
-    this.postFunction = postFunction
+  constructor(mq, from, to, postFunction) {
+    this.mq = mq;
+    this.from = from;
+    this.to = to;
+    this.targets = [];
+    this.postFunction = postFunction;
   }
 
-  target (metric) {
+  target(metric) {
     this.targets.push({
-      'metric': metric,
-    })
+      metric: metric,
+    });
 
-    return this
+    return this;
   }
 
-  _parse_result (result) {
-    let data = {}
-    for (var target of result['data']) {
-      data[target['target']] = {
-        'time_measurements': target['time_measurements'],
-        "minimum": target['minimum'],
-        "maximum": target['maximum'],
-        "sum": target['sum'],
-        "count": target['count'],
-        "integral_ns": target['integral_ns'],
-        "active_time_ns": target['active_time_ns'],
-        "mean": target['mean'],
-        "mean_integral": target['mean_integral'],
-        "mean_sum": target['mean_sum']
-      }
+  _parse_result(result) {
+    let data = {};
+    for (var target of result["data"]) {
+      data[target["target"]] = {
+        time_measurements: target["time_measurements"],
+        minimum: target["minimum"],
+        maximum: target["maximum"],
+        sum: target["sum"],
+        count: target["count"],
+        integral_ns: target["integral_ns"],
+        active_time_ns: target["active_time_ns"],
+        mean: target["mean"],
+        mean_integral: target["mean_integral"],
+        mean_sum: target["mean_sum"],
+      };
     }
 
-    return data
+    return data;
   }
 
-  run () {
+  run() {
     return new Promise((resolve, reject) => {
-      const paramters = {
-        'range': {
-          'from': this.from.toISOString(),
-          'to': this.to.toISOString()
+      const parameters = {
+        range: {
+          from: this.from.toISOString(),
+          to: this.to.toISOString(),
         },
-        'targets': this.targets
-      }
+        targets: this.targets,
+      };
 
-      this.postFunction(`${this.mq.url}/analyze`, paramters, this.mq.config).then(result =>
-        resolve(this._parse_result(result))
-      ).catch(error => reject(error)
-      )
-    })
+      this.postFunction(`${this.mq.url}/analyze`, parameters, this.mq.config)
+        .then((result) => resolve(this._parse_result(result)))
+        .catch((error) => reject(error));
+    });
   }
 }
 
-class HtaQuery{
-  constructor (mq, from, to, points) {
-    this.mq = mq
-    this.from = from
-    this.to = to
-    this.points = points
-    this.metrics = []
+class HtaQuery {
+  constructor(mq, from, to, points, postFunction) {
+    this.mq = mq;
+    this.from = from;
+    this.to = to;
+    this.points = points;
+    this.metrics = [];
+    this.postFunction = postFunction;
   }
 
-  metric (metric) {
-    this.metrics.push(
-      metric
-    )
+  metric(metric) {
+    this.metrics.push(metric);
 
-    return this
+    return this;
   }
 
-  _parse_result (result) {
-    let data = result['data']
-    for(const metric_data of Object.values(data)) {
+  _parse_result(result) {
+    let data = result["data"];
+    for (const metric_data of Object.values(data)) {
       for (const value of metric_data[metric_data.mode]) {
-        value.time = moment(value.time)
+        value.time = moment(value.time);
       }
     }
 
-    return data
+    return data;
   }
 
-  run () {
+  run() {
     return new Promise((resolve, reject) => {
-      const paramters = {
-        'range': {
-          'from': this.from.toISOString(),
-          'to': this.to.toISOString()
+      const parameters = {
+        range: {
+          from: this.from.toISOString(),
+          to: this.to.toISOString(),
         },
-        'maxDataPoints': this.points,
-        'metrics': this.metrics
-      }
-      axios.post(`${this.mq.url}/query_hta`, paramters, this.mq.config).then(result =>
-        resolve(this._parse_result(result))
-      ).catch(error => reject(error)
-      )
-    })
+        maxDataPoints: this.points,
+        metrics: this.metrics,
+      };
+      this.postFunction(`${this.mq.url}/query_hta`, parameters, this.mq.config)
+        .then((result) => resolve(this._parse_result(result)))
+        .catch((error) => reject(error));
+    });
   }
 }
 
 class MetricQHistoric {
-  constructor (url, username = undefined, password = undefined) {
-    this.url = url
-    this.postFunction = axios.post
+  constructor(url, username = undefined, password = undefined) {
+    this.url = url;
+    this.postFunction = axios.post;
     if (username !== undefined && password !== undefined) {
-      this.config = { auth: { username: username, password: password }}
+      this.config = { auth: { username: username, password: password } };
     } else {
-      this.config = undefined
+      this.config = undefined;
     }
   }
 
-  search (target, metadata = false, limit = undefined) {
+  search(target, metadata = false, limit = undefined) {
     return new Promise((resolve, reject) => {
-      this.postFunction(`${this.url}/search`, {
-        target: target,
-        metadata: metadata,
-        limit: limit
-      }, this.config).then(result => {
-        resolve(result['data'])
-      }
-      ).catch(error =>
-        reject(error)
+      this.postFunction(
+        `${this.url}/search`,
+        {
+          target: target,
+          metadata: metadata,
+          limit: limit,
+        },
+        this.config
       )
-    })
+        .then((result) => {
+          resolve(result["data"]);
+        })
+        .catch((error) => reject(error));
+    });
   }
 
-  metadata (target) {
+  metadata(target) {
     return new Promise((resolve, reject) => {
-      this.postFunction(`${this.url}/metadata`, {
-        target: target
-      }, this.config).then(result =>
-        resolve(result['data'][target])
-      ).catch(error =>
-        reject(error)
+      this.postFunction(
+        `${this.url}/metadata`,
+        {
+          target: target,
+        },
+        this.config
       )
-    })
+        .then((result) => resolve(result["data"][target]))
+        .catch((error) => reject(error));
+    });
   }
 
-  query (from, to, num_points) {
-    return new Query(this, moment(from), moment(to), num_points, this.postFunction)
+  query(from, to, num_points) {
+    return new Query(
+      this,
+      moment(from),
+      moment(to),
+      num_points,
+      this.postFunction
+    );
   }
 
-  analyze (from, to) {
-    return new AnalyzeQuery(this, moment(from), moment(to), this.postFunction)
+  analyze(from, to) {
+    return new AnalyzeQuery(this, moment(from), moment(to), this.postFunction);
   }
 
-  htaquery (from, to, num_points) {
-    return new HtaQuery(this, moment(from), moment(to), num_points)
+  hta_query(from, to, num_points) {
+    return new HtaQuery(
+      this,
+      moment(from),
+      moment(to),
+      num_points,
+      this.postFunction
+    );
   }
 }
 
-module.exports = MetricQHistoric
+module.exports = MetricQHistoric;
