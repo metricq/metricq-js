@@ -2,60 +2,59 @@
  * @module unit
  */
 const scales = {
-  'h': 1e2,
-  'k': 1e3,
-  'M': 1e6,
-  'G': 1e9,
-  'T': 1e12,
-  'P': 1e15,
-  'E': 1e18,
-  'Z': 1e21,
-  'Y': 1e24,
-  'd': 1e-1,
-  'c': 1e-2,
-  'm': 1e-3,
-  'µ': 1e-6,
-  'n': 1e-9,
-  'p': 1e-12,
-  'f': 1e-15,
-  'a': 1e-18,
-  'z': 1e-21,
-  'y': 1e-24
+  h: 1e2,
+  k: 1e3,
+  M: 1e6,
+  G: 1e9,
+  T: 1e12,
+  P: 1e15,
+  E: 1e18,
+  Z: 1e21,
+  Y: 1e24,
+  d: 1e-1,
+  c: 1e-2,
+  m: 1e-3,
+  µ: 1e-6,
+  n: 1e-9,
+  p: 1e-12,
+  f: 1e-15,
+  a: 1e-18,
+  z: 1e-21,
+  y: 1e-24,
+};
+
+function scaleToPrefix(scale) {
+  return Object.keys(scales).find((k) => scales[k] === scale);
 }
 
-function scaleToPrefix (scale) {
-  return Object.keys(scales).find(k => scales[k] === scale)
-}
-
-const unicodeSuperscriptNumbers = /⁻?[¹²³⁴⁵⁶⁷⁸⁹⁰]+/g
+const unicodeSuperscriptNumbers = /⁻?[¹²³⁴⁵⁶⁷⁸⁹⁰]+/g;
 const superscriptToAsciiChars = {
-  '¹': '1',
-  '²': '2',
-  '³': '3',
-  '⁴': '4',
-  '⁵': '5',
-  '⁶': '6',
-  '⁷': '7',
-  '⁸': '8',
-  '⁹': '9',
-  '⁰': '0',
-}
+  "¹": "1",
+  "²": "2",
+  "³": "3",
+  "⁴": "4",
+  "⁵": "5",
+  "⁶": "6",
+  "⁷": "7",
+  "⁸": "8",
+  "⁹": "9",
+  "⁰": "0",
+};
 
-function superscriptToAscii (str) {
-  let superscriptString = str
-  let asciiParts = ['^']
-  if (superscriptString.startsWith('⁻')) {
-    asciiParts.push('-')
-    superscriptString = superscriptString.substring(1)
+function superscriptToAscii(str) {
+  let superscriptString = str;
+  let asciiParts = ["^"];
+  if (superscriptString.startsWith("⁻")) {
+    asciiParts.push("-");
+    superscriptString = superscriptString.substring(1);
   }
   for (const char of superscriptString) {
-    asciiParts.push(superscriptToAsciiChars[char])
+    asciiParts.push(superscriptToAsciiChars[char]);
   }
-  return asciiParts.join('')
+  return asciiParts.join("");
 }
 
 class MetricQUnit {
-
   /**
    * Represents a unit or a composition of units. To get a unit object from a string representation use [MetricQUnit.parse]{@linkcode module:unit~MetricQUnit.parse} instead.
    * @constructor
@@ -65,25 +64,27 @@ class MetricQUnit {
    * @param {number} exponent - The exponent of the unit, only applies for standalone units.
    * @param {number} scale - The scale of the unit, only applies for standalone units
    */
-  constructor (symbol, unitParts, category, exponent, scale) {
-    this.unitParts = unitParts ? unitParts : []
+  constructor(symbol, unitParts, category, exponent, scale) {
+    this.unitParts = unitParts ? unitParts : [];
     if (symbol === undefined) {
-      this.symbol = null
+      this.symbol = null;
     } else {
-      this.symbol = symbol
+      this.symbol = symbol;
     }
-    this.category = category
-    this.exponent = 1
-    this.scale = 1
-    if(this.standalone) {
+    this.category = category;
+    this.exponent = 1;
+    this.scale = 1;
+    if (this.standalone) {
       if (isFinite(exponent)) {
-        this.exponent = exponent
+        this.exponent = exponent;
       }
       if (isFinite(scale)) {
-        this.scale = scale
+        this.scale = scale;
       }
     } else if (exponent !== undefined || scale !== undefined) {
-      throw new Error("Exponent and scale are only allowed for standalone units (aka units with a symbol)!")
+      throw new Error(
+        "Exponent and scale are only allowed for standalone units (aka units with a symbol)!"
+      );
     }
   }
 
@@ -92,7 +93,7 @@ class MetricQUnit {
    * @returns {boolean}
    */
   get standalone() {
-    return this.symbol != null
+    return this.symbol != null;
   }
 
   /**
@@ -100,7 +101,7 @@ class MetricQUnit {
    * @returns {boolean}
    */
   isBaseUnit() {
-    return this.unitParts.length === 0
+    return this.unitParts.length === 0;
   }
 
   /**
@@ -114,24 +115,28 @@ class MetricQUnit {
    * @returns {string}
    */
   getUnitString(withScale = true, withExponent = true, includeParts = false) {
-    if((this.standalone && !includeParts) || this.isBaseUnit()) {
-      let parts = []
+    if ((this.standalone && !includeParts) || this.isBaseUnit()) {
+      let parts = [];
       if (withScale && this.scale !== 1) {
-        parts.push(scaleToPrefix(this.scale))
+        parts.push(scaleToPrefix(this.scale));
       }
-      parts.push(this.symbol)
+      parts.push(this.symbol);
       if (withExponent && isFinite(this.exponent) && this.exponent !== 1) {
-        parts.push('^', this.exponent)
+        parts.push("^", this.exponent);
       }
-      return parts.join('')
-    } else if(this.standalone && includeParts) {
-      return this._adjustedUnitParts().map(a => a.getUnitString(withScale, withExponent, includeParts)).join(' ')
+      return parts.join("");
+    } else if (this.standalone && includeParts) {
+      return this._adjustedUnitParts()
+        .map((a) => a.getUnitString(withScale, withExponent, includeParts))
+        .join(" ");
     }
-    return this.unitParts.map(a => a.getUnitString(withScale, withExponent, includeParts)).join(' ')
+    return this.unitParts
+      .map((a) => a.getUnitString(withScale, withExponent, includeParts))
+      .join(" ");
   }
 
-  toString () {
-      return this.getUnitString()
+  toString() {
+    return this.getUnitString();
   }
 
   /**
@@ -139,25 +144,37 @@ class MetricQUnit {
    * @private
    * @returns {array}
    */
-  _adjustedUnitParts () {
-    let unitParts = [...this.unitParts]
+  _adjustedUnitParts() {
+    let unitParts = [...this.unitParts];
     // scale is only required once
-    unitParts[0] = unitParts[0].scaled(this.scale)
+    unitParts[0] = unitParts[0].scaled(this.scale);
 
     // exponent is required for all parts
-    unitParts = unitParts.map(a => a.powered(this.exponent))
-    return unitParts
+    unitParts = unitParts.map((a) => a.powered(this.exponent));
+    return unitParts;
   }
 
   /**
    * Creates a new unit, which is 1 / thisUnit.
    * @returns {MetricQUnit}
    */
-  invert () {
-    if(this.standalone) {
-      return new MetricQUnit(this.symbol, this.unitParts, this.category, this.exponent * -1, this.scale)
+  invert() {
+    if (this.standalone) {
+      return new MetricQUnit(
+        this.symbol,
+        this.unitParts,
+        this.category,
+        this.exponent * -1,
+        this.scale
+      );
     }
-    return new MetricQUnit(undefined, this.unitParts.map((a) => a.invert()), this.category, undefined, undefined)
+    return new MetricQUnit(
+      undefined,
+      this.unitParts.map((a) => a.invert()),
+      this.category,
+      undefined,
+      undefined
+    );
   }
 
   /**
@@ -165,46 +182,68 @@ class MetricQUnit {
    * @param {MetricQUnit} bUnit
    * @returns {MetricQUnit}
    */
-  concat (bUnit) {
-    let newUnitParts = []
-    if(this.standalone) {
-      newUnitParts.push(this)
+  concat(bUnit) {
+    let newUnitParts = [];
+    if (this.standalone) {
+      newUnitParts.push(this);
     } else {
-      newUnitParts = newUnitParts.concat(this.unitParts)
+      newUnitParts = newUnitParts.concat(this.unitParts);
     }
-    if(bUnit.standalone) {
-      newUnitParts.push(bUnit)
+    if (bUnit.standalone) {
+      newUnitParts.push(bUnit);
     } else {
-      newUnitParts = newUnitParts.push(bUnit.unitParts)
+      newUnitParts = newUnitParts.push(bUnit.unitParts);
     }
-    return new MetricQUnit(undefined, newUnitParts, undefined, undefined, undefined)
+    return new MetricQUnit(
+      undefined,
+      newUnitParts,
+      undefined,
+      undefined,
+      undefined
+    );
   }
 
-  toBaseUnitString () {
-    return this.getBaseUnits().map(a => a.getUnitString(false)).join(' ')
+  toBaseUnitString() {
+    return this.getBaseUnits()
+      .map((a) => a.getUnitString(false))
+      .join(" ");
   }
 
   getBaseUnits() {
-    if(this.isBaseUnit()) {
-      return [this]
+    if (this.isBaseUnit()) {
+      return [this];
     }
 
-    return this._adjustedUnitParts().map(aUnit => aUnit.getBaseUnits()).reduce((acc, curValue) => acc.concat(curValue), []).sort((aUnitPart, bUnitPart) => aUnitPart.symbol.localeCompare(bUnitPart.symbol))
+    return this._adjustedUnitParts()
+      .map((aUnit) => aUnit.getBaseUnits())
+      .reduce((acc, curValue) => acc.concat(curValue), [])
+      .sort((aUnitPart, bUnitPart) =>
+        aUnitPart.symbol.localeCompare(bUnitPart.symbol)
+      );
   }
 
-  hasSameBaseUnits (bUnit) {
-    return this.toBaseUnitString() === bUnit.toBaseUnitString()
+  hasSameBaseUnits(bUnit) {
+    return this.toBaseUnitString() === bUnit.toBaseUnitString();
   }
 
-  combinedScale () {
-    if(this.isBaseUnit()) {
-      return this.scale ** this.exponent
+  combinedScale() {
+    if (this.isBaseUnit()) {
+      return this.scale ** this.exponent;
     }
-    return (this.unitParts.map(aUnit => aUnit.combinedScale()).reduce((acc, curValue) => acc * curValue, 1) * this.scale) ** this.exponent
+    return (
+      (this.unitParts
+        .map((aUnit) => aUnit.combinedScale())
+        .reduce((acc, curValue) => acc * curValue, 1) *
+        this.scale) **
+      this.exponent
+    );
   }
 
   isEqual(bUnit) {
-    return this.hasSameBaseUnits(bUnit) && this.combinedScale() === bUnit.combinedScale()
+    return (
+      this.hasSameBaseUnits(bUnit) &&
+      this.combinedScale() === bUnit.combinedScale()
+    );
   }
 
   /**
@@ -213,23 +252,47 @@ class MetricQUnit {
    * @returns {MetricQUnit}
    */
   scaled(scale) {
-    if(this.standalone) {
-      let adjustedScale = scale ** (1 / this.exponent)
-      return new MetricQUnit(this.symbol, this.unitParts, undefined, this.exponent, this.scale * adjustedScale)
+    if (this.standalone) {
+      let adjustedScale = scale ** (1 / this.exponent);
+      return new MetricQUnit(
+        this.symbol,
+        this.unitParts,
+        undefined,
+        this.exponent,
+        this.scale * adjustedScale
+      );
     }
 
-    let unitParts = [...this.unitParts]
-    unitParts[0] = unitParts[0].scaled(scale)
-    return new MetricQUnit(undefined, unitParts, undefined, undefined, undefined)
+    let unitParts = [...this.unitParts];
+    unitParts[0] = unitParts[0].scaled(scale);
+    return new MetricQUnit(
+      undefined,
+      unitParts,
+      undefined,
+      undefined,
+      undefined
+    );
   }
 
   powered(exponent) {
-    if(this.standalone) {
-      return new MetricQUnit(this.symbol, this.unitParts, undefined, this.exponent * exponent, this.scale)
+    if (this.standalone) {
+      return new MetricQUnit(
+        this.symbol,
+        this.unitParts,
+        undefined,
+        this.exponent * exponent,
+        this.scale
+      );
     }
 
-    let unitParts = [...this.unitParts].map(a => a.powered(exponent))
-    return new MetricQUnit(undefined, unitParts, undefined, undefined, undefined)
+    let unitParts = [...this.unitParts].map((a) => a.powered(exponent));
+    return new MetricQUnit(
+      undefined,
+      unitParts,
+      undefined,
+      undefined,
+      undefined
+    );
   }
 
   /**
@@ -239,13 +302,18 @@ class MetricQUnit {
    * @returns {number}
    */
   convertFromUnit(value, oldUnit) {
-    if(!this.hasSameBaseUnits(oldUnit)) {
-      throw new Error("Can not convert value to unit with different base units! this: " + this.toBaseUnitString() + ", oldUnit: " + oldUnit.toBaseUnitString())
+    if (!this.hasSameBaseUnits(oldUnit)) {
+      throw new Error(
+        "Can not convert value to unit with different base units! this: " +
+          this.toBaseUnitString() +
+          ", oldUnit: " +
+          oldUnit.toBaseUnitString()
+      );
     }
 
-    let scale = oldUnit.combinedScale() / this.combinedScale()
+    let scale = oldUnit.combinedScale() / this.combinedScale();
 
-    return value * scale
+    return value * scale;
   }
 
   /**
@@ -272,49 +340,69 @@ class MetricQUnit {
    * @param {string} [symbol] - A string symbol representing this composition of units as a new unit
    * @returns {MetricQUnit}
    */
-  static parse (unitString, symbol) {
-    if (unitString.includes('/')) {
-      const parts = unitString.split('/', 2)
-      const unit = MetricQUnit.parse(parts[0]).concat(MetricQUnit.parse(parts[1]).invert())
-      unit.symbol = symbol
-      return unit
-    } else if (unitString.includes(' ')) {
-      const partsWithAsterisk = unitString.split(' ')
-      let parts = []
+  static parse(unitString, symbol) {
+    if (unitString.includes("/")) {
+      const parts = unitString.split("/", 2);
+      const unit = MetricQUnit.parse(parts[0]).concat(
+        MetricQUnit.parse(parts[1]).invert()
+      );
+      unit.symbol = symbol;
+      return unit;
+    } else if (unitString.includes(" ")) {
+      const partsWithAsterisk = unitString.split(" ");
+      let parts = [];
       for (const part of partsWithAsterisk) {
-        parts = parts.concat(part.split('*'))
+        parts = parts.concat(part.split("*"));
       }
-      const unit = parts.map(part => MetricQUnit.parse(part)).reduce((acc, curValue) => acc.concat(curValue), new MetricQUnit(undefined, [], undefined, undefined, undefined))
-      unit.symbol = symbol
-      return unit
+      const unit = parts
+        .map((part) => MetricQUnit.parse(part))
+        .reduce(
+          (acc, curValue) => acc.concat(curValue),
+          new MetricQUnit(undefined, [], undefined, undefined, undefined)
+        );
+      unit.symbol = symbol;
+      return unit;
     } else {
-      let modifiedUnitString = unitString
-      for (const match of modifiedUnitString.matchAll(unicodeSuperscriptNumbers)) {
-        modifiedUnitString = modifiedUnitString.replace(match[0], superscriptToAscii(match[0]))
+      let modifiedUnitString = unitString;
+      for (const match of modifiedUnitString.matchAll(
+        unicodeSuperscriptNumbers
+      )) {
+        modifiedUnitString = modifiedUnitString.replace(
+          match[0],
+          superscriptToAscii(match[0])
+        );
       }
-      const parts = modifiedUnitString.split('^', 2)
-      let symbol = parts[0]
-      let scale = 1
+      const parts = modifiedUnitString.split("^", 2);
+      let symbol = parts[0];
+      let scale = 1;
       if (symbol.length > 1) {
         for (const [prefix, knowenScale] of Object.entries(scales)) {
           if (symbol.startsWith(prefix)) {
-            scale = knowenScale
-            symbol = symbol.substring(1)
-            break
+            scale = knowenScale;
+            symbol = symbol.substring(1);
+            break;
           }
         }
       }
 
-      let exponent = parts[1]
+      let exponent = parts[1];
       if (exponent !== undefined) {
-        exponent = parseInt(exponent)
+        exponent = parseInt(exponent);
       }
 
-      let existingUnit = MetricQUnit.globalUnitStore.find(aUnit => aUnit.symbol === symbol)
-      if(existingUnit !== undefined) {
-        return new MetricQUnit(existingUnit.symbol, existingUnit.unitParts, existingUnit.category, exponent, scale)
+      let existingUnit = MetricQUnit.globalUnitStore.find(
+        (aUnit) => aUnit.symbol === symbol
+      );
+      if (existingUnit !== undefined) {
+        return new MetricQUnit(
+          existingUnit.symbol,
+          existingUnit.unitParts,
+          existingUnit.category,
+          exponent,
+          scale
+        );
       }
-      return new MetricQUnit(symbol, undefined, undefined, exponent, scale)
+      return new MetricQUnit(symbol, undefined, undefined, exponent, scale);
     }
   }
 
@@ -324,16 +412,23 @@ class MetricQUnit {
    * @returns {boolean}
    */
   static haveSameBaseUnit(units) {
-    const unitSet = new Set(units.map(aUnit => aUnit.toBaseUnitString()))
-    return unitSet.size === 1
+    const unitSet = new Set(units.map((aUnit) => aUnit.toBaseUnitString()));
+    return unitSet.size === 1;
   }
 
-  static globalUnitStore = []
+  static globalUnitStore = [];
 }
 
-MetricQUnit.globalUnitStore.push(MetricQUnit.parse("kg m s^-2", "N"))
-MetricQUnit.globalUnitStore.push(new MetricQUnit("h", [new MetricQUnit("s", [], undefined, 1, 3600)], undefined, 1, 1))
-
+MetricQUnit.globalUnitStore.push(MetricQUnit.parse("kg m s^-2", "N"));
+MetricQUnit.globalUnitStore.push(
+  new MetricQUnit(
+    "h",
+    [new MetricQUnit("s", [], undefined, 1, 3600)],
+    undefined,
+    1,
+    1
+  )
+);
 
 class MetricQUnitConvert {
   /**
@@ -341,9 +436,9 @@ class MetricQUnitConvert {
    * @param {MetricQUnit} fromUnit
    * @param {MetricQUnit} toUnit
    */
-  constructor (fromUnit, toUnit) {
-    this.fromUnit = fromUnit
-    this.toUnit = toUnit
+  constructor(fromUnit, toUnit) {
+    this.fromUnit = fromUnit;
+    this.toUnit = toUnit;
   }
 
   /**
@@ -352,7 +447,7 @@ class MetricQUnitConvert {
    * @returns {number}
    */
   convertValue(value) {
-    return this.toUnit.convertFromUnit(value, this.fromUnit)
+    return this.toUnit.convertFromUnit(value, this.fromUnit);
   }
 
   /**
@@ -361,29 +456,32 @@ class MetricQUnitConvert {
    * @returns {number[]}
    */
   convertValues(values) {
-    return values.map(v => this.toUnit.convertFromUnit(v, this.fromUnit))
+    return values.map((v) => this.toUnit.convertFromUnit(v, this.fromUnit));
   }
 }
 
 class MetricQValueFormatter {
-  constructor (unit) {
-    this.unit = unit
+  constructor(unit) {
+    this.unit = unit;
   }
 
   valueString(value) {
     // source: https://stackoverflow.com/a/53169221
     const numInSciNot = {};
-    [numInSciNot.coefficient, numInSciNot.exponent] =
-      value.toExponential().split('e').map(Number);
+    [numInSciNot.coefficient, numInSciNot.exponent] = value
+      .toExponential()
+      .split("e")
+      .map(Number);
 
     const remainder = numInSciNot.exponent % 3;
     const scaleExponent = numInSciNot.exponent - remainder;
 
     const scaledUnit = this.unit.scaled(10 ** scaleExponent);
-    return (numInSciNot.coefficient * (10 ** remainder)).toString() + scaledUnit.toString()
+    return (
+      (numInSciNot.coefficient * 10 ** remainder).toString() +
+      scaledUnit.toString()
+    );
   }
-
 }
 
-
-export { MetricQUnit, MetricQUnitConvert, MetricQValueFormatter }
+export { MetricQUnit, MetricQUnitConvert, MetricQValueFormatter };
