@@ -1,0 +1,12 @@
+{
+    "extends": [
+    ],
+    "parser": "@babel/eslint-parser",
+    "plugins": [
+    ],
+    "rules": {
+    },
+    "parserOptions": {
+        "requireConfigFile": false
+    }
+}
