@@ -108,7 +108,7 @@ class AnalyzeQuery {
   }
 }
 
-class HtaQuery {
+class Timeline {
   constructor(mq, from, to, points, postFunction) {
     this.mq = mq;
     this.from = from;
@@ -128,7 +128,7 @@ class HtaQuery {
     let data = result["data"];
     for (const metric_data of Object.values(data)) {
       for (const value of metric_data[metric_data.mode]) {
-        value.time = moment(value.time);
+        value.timestamp = moment(value.timestamp / 1e6);
       }
     }
 
@@ -145,7 +145,7 @@ class HtaQuery {
         maxDataPoints: this.points,
         metrics: this.metrics,
       };
-      this.postFunction(`${this.mq.url}/query_hta`, parameters, this.mq.config)
+      this.postFunction(`${this.mq.url}/timeline`, parameters, this.mq.config)
         .then((result) => resolve(this._parse_result(result)))
         .catch((error) => reject(error));
     });
@@ -209,8 +209,8 @@ class MetricQHistoric {
     return new AnalyzeQuery(this, moment(from), moment(to), this.postFunction);
   }
 
-  hta_query(from, to, num_points) {
-    return new HtaQuery(
+  timeline(from, to, num_points) {
+    return new Timeline(
       this,
       moment(from),
       moment(to),

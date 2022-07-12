@@ -34,7 +34,7 @@ a.run()
   .then((data) => console.log(data["elab.ariel.power"]))
   .catch((error) => console.log("Something went wrong: " + error));
 
-let h = mq.htaquery(moment().startOf("day"), moment(), 4);
+let h = mq.timeline(moment().startOf("day"), moment(), 4);
 
 for (let metric of ["elab.ariel.power"]) {
   h.metric(metric);
