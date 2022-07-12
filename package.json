@@ -6,22 +6,15 @@
     "type": "git",
     "url": "https://github.com/metricq/metricq-js.git"
   },
-  "main": "./src/metricq.js",
-  "exports": {
-    ".": "./src/metricq.js"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --progress --mode=production",
-    "lint": "eslint src --ext .js"
+    "lint": "eslint packages --ext .js",
+    "format": "prettier --check 'packages/**/*.js'"
   },
   "author": "Mario Bielert <mario.bielert@tu-dresden.de>",
   "license": "BSD-3-Clause",
-  "dependencies": {
-    "axios": "^0.21.2",
-    "moment": "^2.29.2",
-    "websocket": "^1.0.33"
-  },
   "devDependencies": {
     "@babel/core": "^7.13.14",
     "@babel/eslint-parser": "^7.18.2",
@@ -29,15 +22,10 @@
     "babel-loader": "^8.2.2",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-webpack-plugin": "^3.2.0",
-    "moment-locales-webpack-plugin": "^1.2.0",
-    "prettier": "2.7.1",
-    "terser-webpack-plugin": "^5.1.1",
-    "webpack": "^5.28.0",
-    "webpack-cli": "^4.6.0",
-    "webpack-lowercase-name": "^1.0.4"
+    "prettier": "2.7.1"
   },
   "browser": {
     "child_process": false
-  }
+  },
+  "packageManager": "yarn@3.2.1"
 }

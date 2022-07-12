@@ -1,4 +1,4 @@
-var MetricQHistory = require("./history/metricq-history.js");
+var MetricQHistory = require("./metricq-history.js");
 var moment = require("moment");
 
 var mq = new MetricQHistory(
