@@ -17,8 +17,6 @@
     "axios": "^0.21.2",
     "moment": "^2.29.1"
   },
-  "devDependencies": {
-  },
   "browser": {
     "child_process": false
   },

@@ -17,8 +17,6 @@
     "moment": "^2.29.1",
     "websocket": "^1.0.33"
   },
-  "devDependencies": {
-  },
   "browser": {
     "child_process": false
   },
