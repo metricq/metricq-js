@@ -20,4 +20,4 @@ jobs:
       - run: yarn install
       - run: yarn workspaces foreach npm publish --tolerate-republish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
