@@ -1,6 +1,6 @@
 {
   "name": "@metricq/history",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the metricq-grafana endpoint.",
   "repository": {
     "type": "git",
