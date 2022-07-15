@@ -17,6 +17,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           # Defaults to the user or organization that owns the workflow file
           scope: '@metricq'
+      - run: yarn install
       - run: yarn foreach npm publish --tolerate-republish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
