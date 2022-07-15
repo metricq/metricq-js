@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # Setup .npmrc file to publish to GitHub Packages
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
           registry-url: 'https://npm.pkg.github.com'
@@ -20,4 +20,4 @@ jobs:
       - run: yarn install
       - run: yarn workspaces foreach npm publish --tolerate-republish --access public
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
