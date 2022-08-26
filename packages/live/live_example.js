@@ -1,4 +1,4 @@
-var MetricQLive = require("./live/metricq-live.js");
+var MetricQLive = require("./metricq-live.js");
 
 MetricQLive.connect("wss://websocket.metricq.zih.tu-dresden.de")
   .then((ws) => {
@@ -7,9 +7,9 @@ MetricQLive.connect("wss://websocket.metricq.zih.tu-dresden.de")
     };
 
     ws.onMetaData = (metric, metadata) => {
-      console.log(`${metric}: ${metadata}`);
+      console.log(`Metadata of ${metric}: ${JSON.stringify(metadata)}`);
     };
 
-    ws.subscribe("elab.ariel.power");
+    ws.subscribe("dummy.source");
   })
   .catch((error) => console.log("Something went wrong: " + error));
