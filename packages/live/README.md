@@ -1,6 +1,6 @@
-# metricq-js
+# @metricq/live
 
-For the readme of the single package, visit the corresponding folders or click here for [live](packages/live/README.md) and [history](packages/history/README.md)
+MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the [metricq-sink-websocket](https://github.com/metricq/metricq-sink-websocket) endpoint.
 
 ## Install via npm/yarn
 
@@ -9,13 +9,7 @@ Install via
 ```bash
 npm install @metricq/live
 or
-npm install @metricq/history
-```
-
-```bash
 yarn add @metricq/live
-or
-yarn add @metricq/history
 ```
 
 **If you have previously installed the packages from the GitHub package registry, please delete the registry 
@@ -24,6 +18,5 @@ configuration for the metricq scope.**
 ## Usage
 
 ```js
-import MetricQHistory from "@metricq/history"
 import MetricQLive from "@metricq/live"
 ```

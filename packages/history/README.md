@@ -1,19 +1,13 @@
-# metricq-js
+# @metricq/history
 
-For the readme of the single package, visit the corresponding folders or click here for [live](packages/live/README.md) and [history](packages/history/README.md)
+MetricQ is a highly-scalable, distributed metric data processing framework based on RabbitMQ. This package provides a client library for the [metricq-grafana](https://github.com/metricq/metricq-grafana) endpoint.
 
 ## Install via npm/yarn
 
 Install via
 
 ```bash
-npm install @metricq/live
-or
 npm install @metricq/history
-```
-
-```bash
-yarn add @metricq/live
 or
 yarn add @metricq/history
 ```
@@ -25,5 +19,4 @@ configuration for the metricq scope.**
 
 ```js
 import MetricQHistory from "@metricq/history"
-import MetricQLive from "@metricq/live"
 ```

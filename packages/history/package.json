@@ -19,8 +19,5 @@
   },
   "browser": {
     "child_process": false
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
