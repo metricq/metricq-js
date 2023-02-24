@@ -124,9 +124,10 @@ class Timeline {
     return this;
   }
 
-  _parse_result(result) {
-    let data = result["data"];
+  _parse_result({ data }) {
     for (const metric_data of Object.values(data)) {
+      if (metric_data.mode === "empty" || metric_data.error !== undefined)
+        continue;
       for (const value of metric_data[metric_data.mode]) {
         value.timestamp = moment(value.timestamp / 1e6);
       }
